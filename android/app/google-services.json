@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "25275793757",
+    "project_id": "sachinapp-d29f1",
+    "storage_bucket": "sachinapp-d29f1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:25275793757:android:d4666dec4afa39d66d28b4",
+        "android_client_info": {
+          "package_name": "com.sachinapp.blackout"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "25275793757-tgaq8nabo8qacpp8q21drt1sdgki9v30.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEDJuJBTeCkeNwikWoYwYAazekAc_MCKY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "25275793757-tgaq8nabo8qacpp8q21drt1sdgki9v30.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
