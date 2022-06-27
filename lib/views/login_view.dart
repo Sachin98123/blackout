@@ -30,52 +30,62 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TextField(
-          controller: _email,
-          enableSuggestions: false,
-          autocorrect: false,
-          keyboardType: TextInputType.emailAddress,
-          decoration: const InputDecoration(hintText: 'Enter your Email here'),
-        ),
-        TextField(
-          controller: _password,
-          enableSuggestions: false,
-          autocorrect: false,
-          obscureText: true,
-          decoration:
-              const InputDecoration(hintText: 'Enter your Password here'),
-        ),
-        TextButton(
-            onPressed: () async {
-              final email = _email.text;
-              final password = _password.text;
+    return Scaffold(
+      appBar: AppBar(title: const Text('Login ')),
+      body: Column(
+        children: [
+          TextField(
+            controller: _email,
+            enableSuggestions: false,
+            autocorrect: false,
+            keyboardType: TextInputType.emailAddress,
+            decoration:
+                const InputDecoration(hintText: 'Enter your Email here'),
+          ),
+          TextField(
+            controller: _password,
+            enableSuggestions: false,
+            autocorrect: false,
+            obscureText: true,
+            decoration:
+                const InputDecoration(hintText: 'Enter your Password here'),
+          ),
+          TextButton(
+              onPressed: () async {
+                final email = _email.text;
+                final password = _password.text;
 
-              try {
-                final UserCredential = await FirebaseAuth.instance
-                    .signInWithEmailAndPassword(
-                        email: email, password: password);
-                print(UserCredential);
-              } on FirebaseAuthException catch (e) {
-                print(e);
-                print(e.runtimeType);
-                print(e.code);
-                if (e.code == 'wrong-password') {
-                  print('wrong password man try again ');
-                } else if (e.code == 'user-not-found') {
-                  print('user not found ');
-                } else if (e.code == 'weak-password') {
-                  print('weak Password sir!');
-                } else if (e.code == 'email-already-in-use') {
-                  print('Enter another email cz this one is already in use ');
-                } else if (e.code == 'invalid-email') {
-                  print('invalid email sir ');
+                try {
+                  final userCredential = await FirebaseAuth.instance
+                      .signInWithEmailAndPassword(
+                          email: email, password: password);
+                  print(userCredential);
+                } on FirebaseAuthException catch (e) {
+                  print(e);
+                  print(e.runtimeType);
+                  print(e.code);
+                  if (e.code == 'wrong-password') {
+                    print('wrong password man try again ');
+                  } else if (e.code == 'user-not-found') {
+                    print('user not found ');
+                  } else if (e.code == 'weak-password') {
+                    print('weak Password sir!');
+                  } else if (e.code == 'email-already-in-use') {
+                    print('Enter another email cz this one is already in use ');
+                  } else if (e.code == 'invalid-email') {
+                    print('invalid email sir ');
+                  }
                 }
-              }
-            },
-            child: const Text('Log In'))
-      ],
+              },
+              child: const Text('Log In')),
+          TextButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/register/', (route) => false);
+              },
+              child: const Text('not registered? register'))
+        ],
+      ),
     );
   }
 }
