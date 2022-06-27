@@ -1,6 +1,5 @@
-import 'dart:js';
-
 import 'package:blackout/firebase_options.dart';
+import 'package:blackout/verifyemailview.dart';
 import 'package:blackout/views/login_view.dart';
 import 'package:blackout/views/registerView.dart';
 import 'package:flutter/material.dart';
@@ -26,9 +25,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('HomePage')),
-      body: FutureBuilder(
+    return FutureBuilder(
         future: Firebase.initializeApp(
           options: DefaultFirebaseOptions.currentPlatform,
         ),
@@ -36,45 +33,20 @@ class HomePage extends StatelessWidget {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
               final user = FirebaseAuth.instance.currentUser;
-              if (user?.emailVerified ?? false) {
-                print('you are a verified user ');
+              if (user != null) {
+                if (user.emailVerified) {
+                  print('user verified ');
+                } else {
+                  return const VerifyEmailView();
+                }
               } else {
-                // print('you need to verify your email first !');
-                // Navigator.of(context).push(
-                //     MaterialPageRoute(builder: (context) => VerifyEmailView()));
                 return const LoginView();
               }
+
               return const Text('done');
             default:
-              return const Text('loading...');
-
-            // return const LoginView();
+              return const CircularProgressIndicator();
           }
-        },
-      ),
-    );
-  }
-}
-
-class VerifyEmailView extends StatefulWidget {
-  const VerifyEmailView({Key? key}) : super(key: key);
-
-  @override
-  State<VerifyEmailView> createState() => _VerifyEmailViewState();
-}
-
-class _VerifyEmailViewState extends State<VerifyEmailView> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TextButton(
-            onPressed: () async {
-              final user = FirebaseAuth.instance.currentUser;
-              await user?.sendEmailVerification();
-            },
-            child: const Text('verify email'))
-      ],
-    );
+        });
   }
 }
