@@ -51,6 +51,7 @@ class _RegisterViewState extends State<RegisterView> {
                 const InputDecoration(hintText: 'Enter your Password here'),
           ),
           TextButton(
+              //hello
               onPressed: () async {
                 final email = _email.text;
                 final password = _password.text;
