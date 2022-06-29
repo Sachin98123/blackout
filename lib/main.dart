@@ -1,6 +1,7 @@
 import 'package:blackout/firebase_options.dart';
 import 'package:blackout/verifyemailview.dart';
 import 'package:blackout/views/login_view.dart';
+import 'package:blackout/views/notesView.dart';
 import 'package:blackout/views/registerView.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -35,18 +36,18 @@ class HomePage extends StatelessWidget {
               final user = FirebaseAuth.instance.currentUser;
               if (user != null) {
                 if (user.emailVerified) {
-                  print('user verified ');
+                  // print('user verified ');
+                  return const NotesView();
                 } else {
                   return const VerifyEmailView();
                 }
               } else {
                 return const LoginView();
               }
-
-              return const Text('done');
             default:
               return const CircularProgressIndicator();
           }
         });
   }
 }
+enum MenuAction{logOut}
