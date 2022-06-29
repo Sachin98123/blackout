@@ -11,6 +11,7 @@ import 'firebase_options.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
     title: 'Flutter demo',
     theme: ThemeData(primarySwatch: Colors.blue),
     home: const HomePage(),
@@ -50,4 +51,5 @@ class HomePage extends StatelessWidget {
         });
   }
 }
-enum MenuAction{logOut}
+
+enum MenuAction { logOut }
