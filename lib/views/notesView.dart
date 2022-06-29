@@ -66,5 +66,5 @@ Future<bool> showLogOutDialog(BuildContext context) {
                 child: const Text('exit')),
           ],
         );
-      }).then(((value) => value ?? false));
+      }).then((value) => value ?? false);
 }
