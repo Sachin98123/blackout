@@ -1,3 +1,4 @@
+import 'package:blackout/constants/routes.dart';
 import 'package:blackout/firebase_options.dart';
 import 'package:blackout/verifyemailview.dart';
 import 'package:blackout/views/login_view.dart';
@@ -16,9 +17,9 @@ void main() {
     theme: ThemeData(primarySwatch: Colors.blue),
     home: const HomePage(),
     routes: {
-      '/login/': (context) => const LoginView(),
-      '/register/': (context) => const RegisterView(),
-      '/notes/': (context) => const NotesView(),
+      login: (context) => const LoginView(),
+      register: (context) => const RegisterView(),
+      notes: (context) => const NotesView(),
     },
   ));
 }
