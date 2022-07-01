@@ -1,3 +1,4 @@
+import 'package:blackout/constants/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +14,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('verifylogin view'),
+        title: const Text('verify Email view'),
       ),
       body: Column(
         children: [
@@ -23,12 +24,19 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                 await user?.sendEmailVerification();
               },
               child: const Text('verify email')),
+          const SizedBox(
+            width: 20,
+            height: 20,
+          ),
           TextButton(
-              onPressed: () {
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil('/login/', (route) => false);
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  register,
+                  (route) => false,
+                );
               },
-              child: const Text('loginview')),
+              child: const Text('return'))
         ],
       ),
     );

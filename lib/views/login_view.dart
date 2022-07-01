@@ -1,7 +1,7 @@
 import 'package:blackout/constants/routes.dart';
+import 'package:blackout/inputs/showdialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'dart:developer' as devtools show log;
 
 class LoginView extends StatefulWidget {
@@ -58,27 +58,39 @@ class _LoginViewState extends State<LoginView> {
                 try {
                   await FirebaseAuth.instance.signInWithEmailAndPassword(
                       email: email, password: password);
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                    notes,
-                    (route) => false,
-                  );
-                  devtools.log('you are logged in ');
+                  final user = FirebaseAuth.instance.currentUser;
+
+                  if (user?.emailVerified ?? false) {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      notes,
+                      (route) => false,
+                    );
+                  } else {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      verifyemail,
+                      (route) => false,
+                    );
+                  }
                 } on FirebaseAuthException catch (e) {
                   devtools.log(e.toString());
                   devtools.log(e.runtimeType.toString());
                   devtools.log(e.code);
                   if (e.code == 'wrong-password') {
+                    await showErrDialog(context, 'Wrong Password Sir!');
                     devtools.log('wrong password man try again ');
                   } else if (e.code == 'user-not-found') {
                     devtools.log('user not found ');
-                  } else if (e.code == 'weak-password') {
-                    devtools.log('weak Password sir!');
-                  } else if (e.code == 'email-already-in-use') {
-                    devtools.log(
-                        'Enter another email cz this one is already in use ');
+                    await showErrDialog(context, 'User not found!');
                   } else if (e.code == 'invalid-email') {
                     devtools.log('invalid email sir ');
+                    await showErrDialog(context, 'Invalid Email ');
+                  } else {
+                    {
+                      await showErrDialog(context, 'sorry! ${e.code}');
+                    }
                   }
+                } catch (e) {
+                  await showErrDialog(context, e.toString());
                 }
               },
               child: const Text('Log In')),
