@@ -18,6 +18,15 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
       ),
       body: Column(
         children: [
+          const Text(
+            'We\'ve send you the verifiacation mail in your gmail PLease verify',
+          ),
+          const Divider(
+            height: 20,
+          ),
+          const Text(
+            'didn\'t reccieved an email ? Click on verify email below😸 ',
+          ),
           TextButton(
               onPressed: () async {
                 final user = FirebaseAuth.instance.currentUser;
@@ -29,14 +38,15 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
             height: 20,
           ),
           TextButton(
-              onPressed: () async {
-                await FirebaseAuth.instance.signOut();
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  register,
-                  (route) => false,
-                );
-              },
-              child: const Text('return'))
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                register,
+                (route) => false,
+              );
+            },
+            child: const Text('return'),
+          ),
         ],
       ),
     );
