@@ -1,8 +1,8 @@
 import 'package:blackout/constants/routes.dart';
 import 'package:blackout/inputs/showdialog.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:blackout/services/auth/auth_exception.dart';
+import 'package:blackout/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer' as devtools show log;
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -56,11 +56,11 @@ class _LoginViewState extends State<LoginView> {
                 final password = _password.text;
 
                 try {
-                  await FirebaseAuth.instance.signInWithEmailAndPassword(
-                      email: email, password: password);
-                  final user = FirebaseAuth.instance.currentUser;
+                  await Authservice.firebase()
+                      .logIn(email: email, password: password);
+                  final user = Authservice.firebase().currentUser;
 
-                  if (user?.emailVerified ?? false) {
+                  if (user?.isEmailVerified ?? false) {
                     Navigator.of(context).pushNamedAndRemoveUntil(
                       notes,
                       (route) => false,
@@ -71,27 +71,50 @@ class _LoginViewState extends State<LoginView> {
                       (route) => false,
                     );
                   }
-                } on FirebaseAuthException catch (e) {
-                  devtools.log(e.toString());
-                  devtools.log(e.runtimeType.toString());
-                  devtools.log(e.code);
-                  if (e.code == 'wrong-password') {
-                    await showErrDialog(context, 'Wrong Password Sir!');
-                    devtools.log('wrong password man try again ');
-                  } else if (e.code == 'user-not-found') {
-                    devtools.log('user not found ');
-                    await showErrDialog(context, 'User not found!');
-                  } else if (e.code == 'invalid-email') {
-                    devtools.log('invalid email sir ');
-                    await showErrDialog(context, 'Invalid Email ');
-                  } else {
-                    {
-                      await showErrDialog(context, 'sorry! ${e.code}');
-                    }
-                  }
-                } catch (e) {
-                  await showErrDialog(context, e.toString());
+                } on UserNotFound {
+                  await showErrDialog(
+                    context,
+                    'User not found!',
+                  );
+                } on WrongPasswordAuthException {
+                  await showErrDialog(
+                    context,
+                    'Wrong Password Sir!',
+                  );
+                } on InvalidEmail {
+                  await showErrDialog(
+                    context,
+                    'Invalid Email ',
+                  );
+                } on GenericAuthException {
+                  await showErrDialog(
+                    context,
+                    'sorry! Authentication Error',
+                  );
                 }
+// these were the Firebase method of handeling the
+// exceptions whivh no longer needed
+                //  on FirebaseAuthException catch (e) {
+                //   devtools.log(e.toString());
+                //   devtools.log(e.runtimeType.toString());
+                //   devtools.log(e.code);
+                //   if (e.code == 'wrong-password') {
+                //     await showErrDialog(context, 'Wrong Password Sir!');
+                //     devtools.log('wrong password man try again ');
+                //   } else if (e.code == 'user-not-found') {
+                //     devtools.log('user not found ');
+                //     await showErrDialog(context, 'User not found!');
+                //   } else if (e.code == 'invalid-email') {
+                //     devtools.log('invalid email sir ');
+                //     await showErrDialog(context, 'Invalid Email ');
+                //   } else {
+                //     {
+                //       await showErrDialog(context, 'sorry! ${e.code}');
+                //     }
+                //   }
+                // } catch (e) {
+                //   await showErrDialog(context, e.toString());
+                // }
               },
               child: const Text('Log In')),
           TextButton(

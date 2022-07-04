@@ -1,13 +1,10 @@
 import 'package:blackout/constants/routes.dart';
-import 'package:blackout/firebase_options.dart';
+import 'package:blackout/services/auth/auth_service.dart';
 import 'package:blackout/verifyemailview.dart';
 import 'package:blackout/views/login_view.dart';
 import 'package:blackout/views/notesView.dart';
 import 'package:blackout/views/registerView.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,16 +28,13 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform,
-        ),
+        future: Authservice.firebase().initialize(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
-              final user = FirebaseAuth.instance.currentUser;
+              final user = Authservice.firebase().currentUser;
               if (user != null) {
-                if (user.emailVerified) {
-                  // print('user verified ');
+                if (user.isEmailVerified) {
                   return const NotesView();
                 } else {
                   return const VerifyEmailView();
@@ -54,5 +48,3 @@ class HomePage extends StatelessWidget {
         });
   }
 }
-
-enum MenuAction { logOut }

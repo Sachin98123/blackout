@@ -4,6 +4,9 @@ import 'package:blackout/services/auth/auth_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart'
     show FirebaseAuth, FirebaseAuthException;
 
+import '../../firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
+
 class FirebaseAuthProvider implements AuthProvider {
   @override
   Future<AuthUser> createUser({
@@ -29,7 +32,7 @@ class FirebaseAuthProvider implements AuthProvider {
       } else if (e.code == 'email-already-in-use') {
         throw EmailAlreadyInUse();
       } else if (e.code == 'invalid-email') {
-        throw EnvalidEmail();
+        throw InvalidEmail();
       } else {
         throw GenericAuthException();
       }
@@ -93,5 +96,12 @@ class FirebaseAuthProvider implements AuthProvider {
     } else {
       throw UserNotLoggedIn();
     }
+  }
+
+  @override
+  Future<void> initialize() async {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
   }
 }
