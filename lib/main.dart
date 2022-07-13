@@ -2,8 +2,9 @@ import 'package:blackout/constants/routes.dart';
 import 'package:blackout/services/auth/auth_service.dart';
 import 'package:blackout/verifyemailview.dart';
 import 'package:blackout/views/login_view.dart';
-import 'package:blackout/views/notesView.dart';
-import 'package:blackout/views/registerView.dart';
+import 'package:blackout/views/notes/new_note_view.dart';
+import 'package:blackout/views/notes/notes_view.dart';
+import 'package:blackout/views/register_view.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -18,6 +19,7 @@ void main() {
       register: (context) => const RegisterView(),
       notes: (context) => const NotesView(),
       verifyemail: (context) => const VerifyEmailView(),
+      newNoteRaute: (context) => const NewNotesView(),
     },
   ));
 }

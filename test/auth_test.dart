@@ -44,7 +44,7 @@ void main() {
       await provider.logIn(email: 'email', password: 'password');
       await provider.logOut();
       final user = provider.currentUser;
-      expect(user,null);
+      expect(user, isNotNull);
     });
   });
 }
@@ -77,7 +77,7 @@ class MockAuthProvider implements AuthProvider {
     if (!isInitialized) throw NotInitializedException();
     if (email == 'foobar@gmail.com') throw UserNotFound();
     if (password == 'foobar') throw WrongPasswordAuthException();
-    const user = AuthUser(isEmailVerified: false);
+    const user = AuthUser(email: 'email@gmail.com', isEmailVerified: false);
     _user = user;
     return Future.value(user);
   }
@@ -95,7 +95,7 @@ class MockAuthProvider implements AuthProvider {
     if (!isInitialized) throw NotInitializedException();
     final user = _user;
     if (user == null) throw UserNotFound();
-    const newUser = AuthUser(isEmailVerified: true);
+    const newUser = AuthUser(email: 'email@gmail.com', isEmailVerified: true);
     _user = newUser;
   }
 }

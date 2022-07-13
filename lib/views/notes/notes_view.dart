@@ -4,7 +4,7 @@ import 'package:blackout/services/crud/note_service.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer' as devtool show log;
 
-import '../enums/menu_action.dart';
+import '../../enums/menu_action.dart';
 
 class NotesView extends StatefulWidget {
   const NotesView({Key? key}) : super(key: key);
@@ -28,13 +28,18 @@ class _NotesViewState extends State<NotesView> {
 
   late final NotesService _notesService;
   String get userEmail => Authservice.firebase().currentUser!.email!;
- 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Main UI'),
           actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(newNoteRaute);
+                },
+                icon: const Icon(Icons.add)),
             PopupMenuButton<MenuAction>(
               onSelected: (value) async {
                 switch (value) {
@@ -67,6 +72,7 @@ class _NotesViewState extends State<NotesView> {
                   builder: (context, snapshot) {
                     switch (snapshot.connectionState) {
                       case ConnectionState.waiting:
+                      case ConnectionState.active:
                         return const Text('waiting for the notes');
                       default:
                         return const CircularProgressIndicator();
