@@ -1,7 +1,7 @@
 import 'package:blackout/constants/routes.dart';
-import 'package:blackout/inputs/showdialog.dart';
 import 'package:blackout/services/auth/auth_exception.dart';
 import 'package:blackout/services/auth/auth_service.dart';
+import 'package:blackout/utilities/dialogs/error_dialog.dart';
 import 'package:flutter/material.dart';
 
 class RegisterView extends StatefulWidget {
@@ -61,22 +61,22 @@ class _RegisterViewState extends State<RegisterView> {
                   Authservice.firebase().sendEmailVerification();
                   Navigator.of(context).pushNamed(verifyemail);
                 } on WeakPassword {
-                  await showErrDialog(
+                  await showErrorDialog(
                     context,
                     'Weak Password',
                   );
                 } on EmailAlreadyInUse {
-                  await showErrDialog(
+                  await showErrorDialog(
                     context,
                     'Email already in use ',
                   );
                 } on InvalidEmail {
-                  await showErrDialog(
+                  await showErrorDialog(
                     context,
                     ' Invalid Email',
                   );
                 } on GenericAuthException {
-                  await showErrDialog(
+                  await showErrorDialog(
                     context,
                     'Failed to register ',
                   );

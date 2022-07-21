@@ -13,7 +13,7 @@ const userIdColumn = 'user_id';
 const isSyncedWithCloudColumn = 'sync_cloud';
 const textColumn = 'text';
 const dbName = 'notes.db';
-const noteTable = 'table';
+const noteTable = 'note';
 const userTable = 'user';
 
 class NotesService {
@@ -21,9 +21,15 @@ class NotesService {
 
   List<DataNotes> _notes = [];
   static final NotesService _shared = NotesService._sharedInstance();
-  NotesService._sharedInstance();
+  NotesService._sharedInstance() {
+    _notesStreamController = StreamController<List<DataNotes>>.broadcast(
+      onListen: () {
+        _notesStreamController.sink.add(_notes);
+      },
+    );
+  }
   factory NotesService() => _shared;
-  final _notesStreamController = StreamController<List<DataNotes>>.broadcast();
+  late final StreamController<List<DataNotes>> _notesStreamController;
   Stream<List<DataNotes>> get allNotes => _notesStreamController.stream;
 
   Future<void> _ensureDbIsOpen() async {
@@ -265,16 +271,18 @@ class DataNotes {
   int get hashCode => id.hashCode;
 }
 
-const createUserTable =
-    '''CREATE TABLE IF NOT EXISTS "user"("id" INTEGER NOT NULL ,
-     "email" TEXT NOT NULL UNIQUE, PRIMARY KEY("id" AUTOINCREMENT));''';
+const createUserTable = '''CREATE TABLE IF NOT EXISTS "user" (
+	"id"	INTEGER NOT NULL,
+	"email"	TEXT NOT NULL UNIQUE,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);''';
 
-const createNoteTable = '''   
-      CREATE TABLE IF NOT EXISTS "note" (
+const createNoteTable = ''' 
+   CREATE TABLE IF NOT EXISTS "note" (
 	"id"	INTEGER NOT NULL,
 	"user_id"	INTEGER NOT NULL,
 	"text"	TEXT,
 	"sync_cloud"	INTEGER DEFAULT 0,
 	FOREIGN KEY("user_id") REFERENCES "user"("id"),
 	PRIMARY KEY("id" AUTOINCREMENT)
-);''';
+); ''';

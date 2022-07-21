@@ -22,12 +22,10 @@ class FirebaseAuthProvider implements AuthProvider {
       if (user != null) {
         return user;
       } else {
-        throw UserNotLoggedIn();
+        throw UserNotFound();
       }
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'wrong-password') {
-        throw WrongPasswordAuthException();
-      } else if (e.code == 'weak-password') {
+      if (e.code == 'weak-password') {
         throw WeakPassword();
       } else if (e.code == 'email-already-in-use') {
         throw EmailAlreadyInUse();

@@ -1,7 +1,7 @@
 import 'package:blackout/constants/routes.dart';
-import 'package:blackout/inputs/showdialog.dart';
 import 'package:blackout/services/auth/auth_exception.dart';
 import 'package:blackout/services/auth/auth_service.dart';
+import 'package:blackout/utilities/dialogs/error_dialog.dart';
 import 'package:flutter/material.dart';
 
 class LoginView extends StatefulWidget {
@@ -72,22 +72,22 @@ class _LoginViewState extends State<LoginView> {
                     );
                   }
                 } on UserNotFound {
-                  await showErrDialog(
+                  await showErrorDialog(
                     context,
                     'User not found!',
                   );
                 } on WrongPasswordAuthException {
-                  await showErrDialog(
+                  await showErrorDialog(
                     context,
                     'Wrong Password Sir!',
                   );
                 } on InvalidEmail {
-                  await showErrDialog(
+                  await showErrorDialog(
                     context,
                     'Invalid Email ',
                   );
                 } on GenericAuthException {
-                  await showErrDialog(
+                  await showErrorDialog(
                     context,
                     'sorry! Authentication Error',
                   );

@@ -32,7 +32,7 @@ class _NewNotesViewState extends State<NewNotesView> {
     );
   }
 
-  void _setupTextControllerListener() async {
+  void _setupTextControllerListener() {
     _textController.removeListener(_textControllerListener);
     _textController.addListener(_textControllerListener);
   }
@@ -80,7 +80,7 @@ class _NewNotesViewState extends State<NewNotesView> {
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.done:
-                _note = snapshot.data as DataNotes;
+                _note = snapshot.data as DataNotes?;
                 _setupTextControllerListener();
                 return TextField(
                   controller: _textController,
