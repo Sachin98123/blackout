@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:blackout/services/crud/crud_exception.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
