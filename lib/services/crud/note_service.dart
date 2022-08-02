@@ -6,15 +6,6 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 
-const idColumn = 'id';
-const emailColumn = 'email';
-const userIdColumn = 'user_id';
-const isSyncedWithCloudColumn = 'sync_cloud';
-const textColumn = 'text';
-const dbName = 'notes.db';
-const noteTable = 'note';
-const userTable = 'user';
-
 class NotesService {
   Database? _db;
 
@@ -42,8 +33,8 @@ class NotesService {
       final user = await getUser(email: email);
       return user;
     } on CouldNotFindUser {
-      final createUseR = await createUser(email: email);
-      return createUseR;
+      final createdUser = await createUser(email: email);
+      return createdUser;
     } catch (e) {
       rethrow;
     }
@@ -63,8 +54,8 @@ class NotesService {
       throw CouldNotFindUser();
     }
     const text = '';
-    //create User
-    final noteId = await db.insert(userTable, {
+    //create the note
+    final noteId = await db.insert(noteTable, {
       userIdColumn: owner.id,
       textColumn: text,
       isSyncedWithCloudColumn: 1,
@@ -72,8 +63,8 @@ class NotesService {
     final note = DataNotes(
       id: noteId,
       userId: owner.id,
-      isSyncedWithCloud: true,
       text: text,
+      isSyncedWithCloud: true,
     );
     _notes.add(note);
     _notesStreamController.add(_notes);
@@ -86,7 +77,7 @@ class NotesService {
     final deleteCount = await db.delete(
       noteTable,
       where: 'id=?',
-      whereArgs: ['id'],
+      whereArgs: [id],
     );
     if (deleteCount == 0) {
       throw CouldNotDeleteUser();
@@ -112,12 +103,13 @@ class NotesService {
       noteTable,
       limit: 1,
       where: 'id=?',
-      whereArgs: ['id'],
+      whereArgs: [id],
     );
     if (notes.isEmpty) {
       throw CouldNotFindNote();
     } else {
       final note = DataNotes.fromRow(notes.first);
+      _notes.removeWhere((note) => note.id == id);
       _notes.add(note);
       _notesStreamController.add(_notes);
       return note;
@@ -234,7 +226,7 @@ class DatabaseUser {
       : id = map[idColumn] as int,
         email = map[emailColumn] as String;
   @override
-  String toString() => 'person, id=$id,email=$email';
+  String toString() => 'person, ID=$id,email=$email';
   @override
   bool operator ==(covariant DatabaseUser other) => id == other.id;
 
@@ -248,21 +240,22 @@ class DataNotes {
   final String text;
   final bool isSyncedWithCloud;
 
-  const DataNotes(
-      {required this.id,
-      required this.userId,
-      required this.isSyncedWithCloud,
-      required this.text});
+  DataNotes({
+    required this.id,
+    required this.userId,
+    required this.text,
+    required this.isSyncedWithCloud,
+  });
 
   DataNotes.fromRow(Map<String, Object?> map)
       : id = map[idColumn] as int,
         userId = map[userIdColumn] as int,
+        text = map[textColumn] as String,
         isSyncedWithCloud =
-            (map[isSyncedWithCloudColumn] as int) == 1 ? true : false,
-        text = map[textColumn] as String;
+            (map[isSyncedWithCloudColumn] as int) == 1 ? true : false;
   @override
   String toString() =>
-      'notes,id=$id,userId=$userId,isSyncedWithCloud=$isSyncedWithCloud,text=$text';
+      'notes,ID=$id,userId=$userId,isSyncedWithCloud=$isSyncedWithCloud,text=$text';
   @override
   bool operator ==(covariant DataNotes other) => id == other.id;
 
@@ -270,6 +263,14 @@ class DataNotes {
   int get hashCode => id.hashCode;
 }
 
+const dbName = 'notes.db';
+const noteTable = 'note';
+const userTable = 'user';
+const idColumn = 'id';
+const emailColumn = 'email';
+const userIdColumn = 'user_id';
+const textColumn = 'text';
+const isSyncedWithCloudColumn = 'is_synced_with_cloud';
 const createUserTable = '''CREATE TABLE IF NOT EXISTS "user" (
 	"id"	INTEGER NOT NULL,
 	"email"	TEXT NOT NULL UNIQUE,
@@ -281,7 +282,7 @@ const createNoteTable = '''
 	"id"	INTEGER NOT NULL,
 	"user_id"	INTEGER NOT NULL,
 	"text"	TEXT,
-	"sync_cloud"	INTEGER DEFAULT 0,
+	"is_synced_with_cloud"	INTEGER NOT NULL DEFAULT 0,
 	FOREIGN KEY("user_id") REFERENCES "user"("id"),
 	PRIMARY KEY("id" AUTOINCREMENT)
 ); ''';

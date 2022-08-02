@@ -16,20 +16,20 @@ class NotesView extends StatefulWidget {
 }
 
 class _NotesViewState extends State<NotesView> {
+  late final NotesService _notesService;
+  String get userEmail => Authservice.firebase().currentUser!.email!;
+
   @override
   void initState() {
     _notesService = NotesService();
     super.initState();
   }
 
-  late final NotesService _notesService;
-  String get userEmail => Authservice.firebase().currentUser!.email!;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Main UI'),
+          title: const Text('       YOUR NOTES'),
           actions: [
             IconButton(
                 onPressed: () {
@@ -71,11 +71,17 @@ class _NotesViewState extends State<NotesView> {
                       case ConnectionState.active:
                         if (snapshot.hasData) {
                           final allNotes = snapshot.data as List<DataNotes>;
-                          return NotesListView(
-                              notes: allNotes,
-                              onDeleteNote: (note) async {
-                                await _notesService.deleteNotes(id: note.id);
+                          return ListView.builder(
+                              itemCount: allNotes.length,
+                              itemBuilder: (context, index) {
+                                return const Text('returned value ');
                               });
+
+                          //   return NotesListView(
+                          //       notes: allNotes,
+                          //       onDeleteNote: (note) async {
+                          //         await _notesService.deleteNotes(id: note.id);
+                          //       });
                         } else {
                           return const Text('waiting for the data');
                         }
